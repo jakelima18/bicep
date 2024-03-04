@@ -1,22 +1,14 @@
-on: [push]
-name: Azure ARM
-jobs:
-    build-and-deploy:
-        runs-on: ubuntu-latest
-        steps:
-            # Checkout code
-            - uses: actions/checkout@main
+name: Multijob workflow to build and deploy Docker app to Azure
 
-              # Log into Azure
-            - uses: azure/login@v1
-              with:
-                  creds: ${{ secrets.AZURE_CREDENTIALS }}
+on: push
 
-              # Deploy Bicep file
-            - name: deploy
-              uses: azure/arm-deploy@v1
-              with:
-                  subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION }}
-                  resourceGroupName: ${{ secrets.AZURE_RG }}
-                  template: ./main.bicep
-                  failOnStdErr: false
+jobs:   
+  deploy-using-azure-pipelines:
+    runs-on: ubuntu-latest
+    steps:
+    - name: 'Trigger an Azure Pipeline to deploy the app to PRODUCTION'
+      uses: Azure/pipelines@releases/v1
+      with:
+        azure-devops-project-url: 'https://dev.azure.com/agilops/bicep'
+        azure-pipeline-name: 'bicep' 
+        azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
