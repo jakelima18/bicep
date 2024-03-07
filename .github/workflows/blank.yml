@@ -6,9 +6,11 @@ jobs:
   deploy-using-azure-pipelines:
     runs-on: ubuntu-latest
     steps:
-    - name: 'Trigger an Azure Pipeline to deploy the app to PRODUCTION'
-      uses: Azure/pipelines@releases/v1
-      with:
-        azure-devops-project-url: 'https://dev.azure.com/agilops/bicep'
-        azure-pipeline-name: 'bicep' 
-        azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
+      - run: |
+         curl --location 'https://dev.azure.com/agilops/bicep/_apis/build/builds?api-version=6.0' --header 'Content-Type: application/json' --header 'Authorization: Basic PAT_BASE64' --data '{"definition": {"id": "6"},"sourceBranch": "refs/heads/develop"}'
+    #- name: 'Trigger an Azure Pipeline to deploy the app to PRODUCTION'
+      #uses: Azure/pipelines@releases/v1
+      #with:
+        #azure-devops-project-url: 'https://dev.azure.com/agilops/bicep'
+        #azure-pipeline-name: 'bicep' 
+        #azure-devops-token: '${{ secrets.AZURE_DEVOPS_TOKEN }}'
